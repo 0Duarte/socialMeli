@@ -1,11 +1,10 @@
 package meli.socialmeli.controller;
 
+import meli.socialmeli.dto.FollowersCountDto;
+import meli.socialmeli.dto.UserFollowersListDto;
 import meli.socialmeli.services.FollowService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -23,5 +22,17 @@ public class FollowController {
 
         followService.follow(userId, userIdToFollow);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/followers/count")
+    public ResponseEntity<FollowersCountDto> getFollowersCount(@PathVariable Integer userId) {
+        FollowersCountDto dto = followService.getFollowersCount(userId);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/{userId}/followers/list")
+    public ResponseEntity<UserFollowersListDto> getFollowersList(@PathVariable Integer userId){
+        UserFollowersListDto dto = followService.getFollowersList(userId);
+        return ResponseEntity.ok(dto);
     }
 }

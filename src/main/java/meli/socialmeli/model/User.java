@@ -37,6 +37,10 @@ public class User {
         this.userName = userName;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public Set<User> getFollowings() {
         return followings;
     }
