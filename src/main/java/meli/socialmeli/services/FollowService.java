@@ -3,6 +3,7 @@ package meli.socialmeli.services;
 import jakarta.transaction.Transactional;
 import meli.socialmeli.dto.FollowersCountDto;
 import meli.socialmeli.dto.UserFollowersListDto;
+import meli.socialmeli.dto.UserFollowingListDto;
 import meli.socialmeli.dto.UserSummaryDto;
 import meli.socialmeli.model.User;
 import meli.socialmeli.repository.UserRepository;
@@ -59,10 +60,27 @@ public class FollowService {
                         follower.getUserName()))
                 .collect(Collectors.toList());
 
-    return new UserFollowersListDto(
-            userId,
-            seller.getUserName(),
-            followersDtos
-    );
+        return new UserFollowersListDto(
+                userId,
+                seller.getUserName(),
+                followersDtos
+        );
+    }
+
+    public UserFollowingListDto getFollowedList(Integer userId){
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new IllegalArgumentException("Usuário não encontrado."));
+
+        List<UserSummaryDto> followingDtos = user.getFollowings().stream().map(following ->
+                new UserSummaryDto(
+                        following.getId(),
+                        following.getUserName()))
+                .collect(Collectors.toList());
+
+        return new UserFollowingListDto(
+                userId,
+                user.getUserName(),
+                followingDtos
+        );
     }
 }
