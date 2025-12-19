@@ -1,9 +1,17 @@
 package meli.socialmeli.services;
 
 import jakarta.transaction.Transactional;
+import meli.socialmeli.dto.FollowersCountDto;
+import meli.socialmeli.dto.UserFollowersListDto;
+import meli.socialmeli.dto.UserSummaryDto;
 import meli.socialmeli.model.User;
 import meli.socialmeli.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FollowService {
@@ -20,7 +28,7 @@ public class FollowService {
         }
 
         User follower = userRepository.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("Usuário seguidor não encontrado."));
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário seguidor não encontrado."));
 
         User seller = userRepository.findById(userIdToFollow).orElseThrow(() ->
                 new IllegalArgumentException("Usuário a ser seguido não encontrado."));
@@ -29,5 +37,32 @@ public class FollowService {
             follower.getFollowings().add(seller);
             userRepository.save(follower);
         }
+    }
+
+    public FollowersCountDto getFollowersCount(Integer userId){
+        User seller = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+
+        int followersCount = seller.getFollowers().size();
+
+        return new FollowersCountDto(userId, seller.getUserName(), followersCount);
+
+    }
+
+    public UserFollowersListDto getFollowersList(Integer userId){
+        User seller = userRepository.findById(userId).orElseThrow(() ->
+                new IllegalArgumentException("Usuário a ser consultado não encontrado."));
+
+        List<UserSummaryDto> followersDtos = seller.getFollowers().stream().map(follower ->
+                new UserSummaryDto(
+                        follower.getId(),
+                        follower.getUserName()))
+                .collect(Collectors.toList());
+
+    return new UserFollowersListDto(
+            userId,
+            seller.getUserName(),
+            followersDtos
+    );
     }
 }
