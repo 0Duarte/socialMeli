@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,7 @@ public class FollowService {
 
     }
 
-    public UserFollowersListDto getFollowersList(Integer userId){
+    public UserFollowersListDto getFollowersList(Integer userId, String order){
         User seller = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("Usuário a ser consultado não encontrado."));
 
@@ -78,6 +79,8 @@ public class FollowService {
                         follower.getUserName()))
                 .collect(Collectors.toList());
 
+        sortByName(followersDtos, order);
+
         return new UserFollowersListDto(
                 userId,
                 seller.getUserName(),
@@ -85,7 +88,7 @@ public class FollowService {
         );
     }
 
-    public UserFollowingListDto getFollowedList(Integer userId){
+    public UserFollowingListDto getFollowedList(Integer userId, String order){
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("Usuário não encontrado."));
 
@@ -95,10 +98,29 @@ public class FollowService {
                         following.getUserName()))
                 .collect(Collectors.toList());
 
+        sortByName(followingDtos, order);
+
         return new UserFollowingListDto(
                 userId,
                 user.getUserName(),
                 followingDtos
         );
+    }
+
+    private void sortByName(List<UserSummaryDto> list, String order){
+        if(order == null || order.isBlank()){
+            return;
+        }
+
+        switch(order){
+            case "name_asc":
+                list.sort(Comparator.comparing(UserSummaryDto::getUserName));
+                break;
+            case "name_desc":
+                list.sort(Comparator.comparing(UserSummaryDto::getUserName).reversed());
+                break;
+            default:
+                throw new IllegalArgumentException("Ordem inválida. Use 'name_asc' ou 'name_desc'.");
+        }
     }
 }
