@@ -40,6 +40,24 @@ public class FollowService {
         }
     }
 
+    @Transactional
+    public void unfollow(Integer userId, Integer userIdToUnfollow){
+        if(userId.equals(userIdToUnfollow)){
+            throw new IllegalArgumentException("Um usuário não pode deixar de seguir a si mesmo.");
+        }
+
+        User follower = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário seguidor não encontrado."));
+
+        User seller = userRepository.findById(userIdToUnfollow).orElseThrow(() ->
+                new IllegalArgumentException("Usuário a ser deixado de seguir não encontrado."));
+
+        if (follower.getFollowings().contains(seller)) {
+            follower.getFollowings().remove(seller);
+            userRepository.save(follower);
+        }
+    }
+
     public FollowersCountDto getFollowersCount(Integer userId){
         User seller = userRepository.findById(userId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));

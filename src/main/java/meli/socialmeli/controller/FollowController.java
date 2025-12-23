@@ -42,4 +42,13 @@ public class FollowController {
         UserFollowingListDto dto = followService.getFollowedList(userId);
         return ResponseEntity.ok(dto);
     }
+
+    @PostMapping("/{userId}/unfollow/{userIdToFollow}")
+    public ResponseEntity<Void> unfollow(
+            @PathVariable Integer userId,
+            @PathVariable Integer userIdToFollow) {
+
+        followService.unfollow(userId, userIdToFollow);
+        return ResponseEntity.ok().build();
+    }
 }
