@@ -2,6 +2,7 @@ package meli.socialmeli.controller;
 
 import meli.socialmeli.dto.FollowedPostsResponseDto;
 import meli.socialmeli.dto.NewPostRequestDto;
+import meli.socialmeli.dto.NewPromoPostRequestDto;
 import meli.socialmeli.services.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,4 +30,11 @@ public class PostController
         FollowedPostsResponseDto response = postService.getFollowedPosts(userId, order);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/promo-pub")
+    public ResponseEntity<Void> publishPromo(@RequestBody NewPromoPostRequestDto dto) {
+        postService.createPromoPost(dto);
+        return ResponseEntity.ok().build();
+    }
+
 }

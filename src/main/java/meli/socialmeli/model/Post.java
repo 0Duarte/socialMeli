@@ -22,8 +22,9 @@ public class Post {
     private Product product;
 
     private Integer category;
-
     private Double price;
+    private Boolean hasPromo;
+    private Double discount;
 
     public Post(){}
 
@@ -31,12 +32,16 @@ public class Post {
                 LocalDate date,
                 Product product,
                 Integer category,
-                Double price) {
+                Double price,
+                Boolean hasPromo,
+                Double discount) {
         this.seller = seller;
         this.date = date;
         this.product = product;
         this.category = category;
         this.price = price;
+        this.hasPromo = hasPromo;
+        this.discount = discount;
     }
 
     public Integer getId() {
@@ -59,7 +64,9 @@ public class Post {
         return category;
     }
 
-    public Double getPrice() {
-        return price;
-    }
+    public Double getPrice() {return price;}
+
+    public Boolean getHasPromo() {return hasPromo;}
+
+    public Double getDiscount() {return discount;}
 }

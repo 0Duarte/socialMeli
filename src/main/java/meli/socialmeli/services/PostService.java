@@ -57,7 +57,9 @@ public class PostService {
                 date,
                 product,
                 dto.getCategory(),
-                dto.getPrice()
+                dto.getPrice(),
+                false,
+                0.0
         );
 
         postRepository.save(post);
@@ -113,6 +115,39 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return new FollowedPostsResponseDto(userId, postDtos);
+    }
+
+    public void createPromoPost(NewPromoPostRequestDto dto) {
+
+        User seller = userRepository.findById(dto.getUser_id()).orElseThrow(() ->
+                new IllegalArgumentException("Usuário vendedor não encontrado."));
+
+        LocalDate date = LocalDate.parse(dto.getDate(), FORMATTER);
+
+        ProductRequestDto p = dto.getProduct();
+
+        Product product = new Product(
+                p.getProduct_id(),
+                p.getProduct_name(),
+                p.getType(),
+                p.getBrand(),
+                p.getColor(),
+                p.getNotes()
+        );
+
+        productRepository.save(product);
+
+        Post post = new Post(
+                seller,
+                date,
+                product,
+                dto.getCategory(),
+                dto.getPrice(),
+                dto.getHas_promo(),
+                dto.getDiscount()
+        );
+
+        postRepository.save(post);
     }
 
     private void sortPostsByDate(List<Post> posts, String order) {
