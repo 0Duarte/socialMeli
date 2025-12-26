@@ -23,8 +23,10 @@ public class PostController
     }
 
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<FollowedPostsResponseDto> getFollowedPosts(@PathVariable Integer userId) {
-        FollowedPostsResponseDto response = postService.getFollowedPosts(userId);
+    public ResponseEntity<FollowedPostsResponseDto> getFollowedPosts(
+            @PathVariable Integer userId,
+            @RequestParam (required = false) String order) {
+        FollowedPostsResponseDto response = postService.getFollowedPosts(userId, order);
         return ResponseEntity.ok(response);
     }
 }

@@ -63,22 +63,18 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public FollowedPostsResponseDto getFollowedPosts(Integer userId) {
+    public FollowedPostsResponseDto getFollowedPosts(Integer userId, String order) {
 
-        // 1. buscar usuário que está pedindo o feed
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new IllegalArgumentException("Usuário não encontrado."));
 
-        // 2. pegar os vendedores que ele segue
         Set<User> followings = user.getFollowings();
         if (followings.isEmpty()) {
             return new FollowedPostsResponseDto(userId, List.of());
         }
 
-        // 3. buscar posts desses vendedores
         List<Post> posts = postRepository.findBySellerIn(followings);
 
-        // 4. filtrar últimas 2 semanas
         LocalDate today = LocalDate.now();
         LocalDate twoWeeksAgo = today.minusDays(14);
 
@@ -91,10 +87,8 @@ public class PostService {
                 })
                 .collect(Collectors.toList());
 
-        // 5. ordenar por data (mais recentes primeiro)
-        recentPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        sortPostsByDate(recentPosts, order);
 
-        // 6. mapear para DTO de resposta
         List<FollowedPostDto> postDtos = recentPosts.stream()
                 .map(post -> {
                     Product product = post.getProduct();
@@ -108,9 +102,9 @@ public class PostService {
                     );
 
                     return new FollowedPostDto(
-                            post.getSeller().getId(),           // user_id do vendedor
-                            post.getId(),                       // post_id
-                            post.getDate().format(FORMATTER),   // date em dd-MM-aaaa
+                            post.getSeller().getId(),
+                            post.getId(),
+                            post.getDate().format(FORMATTER),
                             productDto,
                             post.getCategory(),
                             post.getPrice()
@@ -119,5 +113,23 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return new FollowedPostsResponseDto(userId, postDtos);
+    }
+
+    private void sortPostsByDate(List<Post> posts, String order) {
+        if (order == null || order.isBlank()) {
+            posts.sort(Comparator.comparing(Post::getDate).reversed());
+            return;
+        }
+
+        switch (order) {
+            case "date_asc":
+                posts.sort(Comparator.comparing(Post::getDate));
+                break;
+            case "date_desc":
+                posts.sort(Comparator.comparing(Post::getDate).reversed());
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de ordenação por data inválido: " + order);
+        }
     }
 }
