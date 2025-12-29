@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findBySellerIn(Collection<User> sellers);
+    List<Post> findBySellerAndHasPromoTrue(User seller);
 
 }

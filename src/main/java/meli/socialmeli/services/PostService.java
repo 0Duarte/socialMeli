@@ -150,6 +150,20 @@ public class PostService {
         postRepository.save(post);
     }
 
+    public PromoProductsCountDto getPromoProductsCount(Integer userId) {
+
+        User seller = userRepository.findById(userId).orElseThrow(() ->
+                new IllegalArgumentException("Usuário vendedor não encontrado."));
+
+        int count = postRepository.findBySellerAndHasPromoTrue(seller).size();
+
+        return new PromoProductsCountDto(
+                seller.getId(),
+                seller.getUserName(),
+                count
+        );
+    }
+
     private void sortPostsByDate(List<Post> posts, String order) {
         if (order == null || order.isBlank()) {
             posts.sort(Comparator.comparing(Post::getDate).reversed());

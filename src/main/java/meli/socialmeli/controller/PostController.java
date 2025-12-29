@@ -3,6 +3,7 @@ package meli.socialmeli.controller;
 import meli.socialmeli.dto.FollowedPostsResponseDto;
 import meli.socialmeli.dto.NewPostRequestDto;
 import meli.socialmeli.dto.NewPromoPostRequestDto;
+import meli.socialmeli.dto.PromoProductsCountDto;
 import meli.socialmeli.services.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,14 @@ public class PostController
     public ResponseEntity<Void> publishPromo(@RequestBody NewPromoPostRequestDto dto) {
         postService.createPromoPost(dto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/promo-pub/count")
+    public ResponseEntity<PromoProductsCountDto> getPromoProductsCount(
+            @RequestParam("user_id") Integer userId) {
+
+        PromoProductsCountDto dto = postService.getPromoProductsCount(userId);
+        return ResponseEntity.ok(dto);
     }
 
 }
