@@ -52,11 +52,21 @@ public class Post {
         return seller;
     }
 
+    public User setSeller(User seller) {
+        this.seller = seller;
+        return seller;
+    }
+
     public Product getProduct() {
         return product;
     }
 
     public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalDate setDate(LocalDate date) {
+        this.date = date;
         return date;
     }
 

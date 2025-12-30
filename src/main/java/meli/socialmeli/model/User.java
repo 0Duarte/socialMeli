@@ -19,6 +19,10 @@ public class User {
     @Size(max = 15)
     private String userName;
 
+    @Column(name = "is_seller", nullable = false)
+    @NotBlank
+    private Boolean is_seller;
+
     @ManyToMany
     @JoinTable(
             name = "user_follows",
@@ -32,9 +36,10 @@ public class User {
 
     public User() {}
 
-    public User(Integer id, String userName) {
+    public User(Integer id, String userName, Boolean is_seller) {
         this.id = id;
         this.userName = userName;
+        this.is_seller = is_seller;
     }
 
     public Integer getId() {
@@ -63,6 +68,10 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Boolean getIs_seller() {
+        return is_seller;
     }
 }
 //test
