@@ -1,6 +1,12 @@
 package meli.socialmeli.services;
 
-import meli.socialmeli.dto.*;
+import meli.socialmeli.dto.request.NewPostRequestDto;
+import meli.socialmeli.dto.request.NewPromoPostRequestDto;
+import meli.socialmeli.dto.request.ProductRequestDto;
+import meli.socialmeli.dto.response.FollowedPostDto;
+import meli.socialmeli.dto.response.FollowedPostsResponseDto;
+import meli.socialmeli.dto.response.ProductResponseDto;
+import meli.socialmeli.dto.response.PromoProductsCountDto;
 import meli.socialmeli.model.Post;
 import meli.socialmeli.model.Product;
 import meli.socialmeli.model.User;
@@ -10,7 +16,6 @@ import meli.socialmeli.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +26,6 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ProductRepository productRepository;
-
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-uuuu");
 
     public PostService(UserRepository userRepository,
                        PostRepository postRepository,
@@ -37,7 +40,7 @@ public class PostService {
         User seller = userRepository.findById(dto.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        LocalDate date = LocalDate.parse(dto.getDate(), FORMATTER);
+        LocalDate date = dto.getDate();
 
         ProductRequestDto p = dto.getProduct();
 
@@ -106,7 +109,7 @@ public class PostService {
                     return new FollowedPostDto(
                             post.getSeller().getId(),
                             post.getId(),
-                            post.getDate().format(FORMATTER),
+                            post.getDate(),
                             productDto,
                             post.getCategory(),
                             post.getPrice()
@@ -122,7 +125,7 @@ public class PostService {
         User seller = userRepository.findById(dto.getUser_id()).orElseThrow(() ->
                 new IllegalArgumentException("Usuário vendedor não encontrado."));
 
-        LocalDate date = LocalDate.parse(dto.getDate(), FORMATTER);
+        LocalDate date = dto.getDate();
 
         ProductRequestDto p = dto.getProduct();
 

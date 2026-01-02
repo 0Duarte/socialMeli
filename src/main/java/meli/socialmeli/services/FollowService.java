@@ -1,10 +1,10 @@
 package meli.socialmeli.services;
 
 import jakarta.transaction.Transactional;
-import meli.socialmeli.dto.FollowersCountDto;
-import meli.socialmeli.dto.UserFollowersListDto;
-import meli.socialmeli.dto.UserFollowingListDto;
-import meli.socialmeli.dto.UserSummaryDto;
+import meli.socialmeli.dto.response.FollowersCountDto;
+import meli.socialmeli.dto.response.UserFollowersListDto;
+import meli.socialmeli.dto.response.UserFollowingListDto;
+import meli.socialmeli.dto.response.UserSummaryDto;
 import meli.socialmeli.model.User;
 import meli.socialmeli.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -25,15 +25,23 @@ public class FollowService {
 
     @Transactional
     public void follow(Integer userId, Integer userIdToFollow){
+        if (userId == null || userIdToFollow == null) {
+            throw new IllegalArgumentException("IDs de usuário inválidos.");
+        }
+
         if (userId.equals(userIdToFollow)){
             throw new IllegalArgumentException("Um usuário não pode seguir a si mesmo.");
         }
 
         User follower = userRepository.findById(userId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário seguidor não encontrado."));
+        new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário seguidor não encontrado."));
 
         User seller = userRepository.findById(userIdToFollow).orElseThrow(() ->
                 new IllegalArgumentException("Usuário a ser seguido não encontrado."));
+
+        if (!seller.getIs_seller()) {
+            throw new IllegalArgumentException("Só é possível seguir usuários vendedores.");
+        }
 
         if (!follower.getFollowings().contains(seller)) {
             follower.getFollowings().add(seller);

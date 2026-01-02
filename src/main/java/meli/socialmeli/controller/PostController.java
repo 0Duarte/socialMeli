@@ -1,9 +1,10 @@
 package meli.socialmeli.controller;
 
-import meli.socialmeli.dto.FollowedPostsResponseDto;
-import meli.socialmeli.dto.NewPostRequestDto;
-import meli.socialmeli.dto.NewPromoPostRequestDto;
-import meli.socialmeli.dto.PromoProductsCountDto;
+import jakarta.validation.Valid;
+import meli.socialmeli.dto.response.FollowedPostsResponseDto;
+import meli.socialmeli.dto.request.NewPostRequestDto;
+import meli.socialmeli.dto.request.NewPromoPostRequestDto;
+import meli.socialmeli.dto.response.PromoProductsCountDto;
 import meli.socialmeli.services.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class PostController
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<Void> publish(@RequestBody NewPostRequestDto dto) {
+    public ResponseEntity<Void> publish(@Valid @RequestBody NewPostRequestDto dto) {
         postService.createPost(dto);
         return ResponseEntity.ok().build();
     }
@@ -33,7 +34,7 @@ public class PostController
     }
 
     @PostMapping("/promo-pub")
-    public ResponseEntity<Void> publishPromo(@RequestBody NewPromoPostRequestDto dto) {
+    public ResponseEntity<Void> publishPromo(@Valid @RequestBody NewPromoPostRequestDto dto) {
         postService.createPromoPost(dto);
         return ResponseEntity.ok().build();
     }

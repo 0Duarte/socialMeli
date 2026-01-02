@@ -1,8 +1,8 @@
 package meli.socialmeli.controller;
 
-import meli.socialmeli.dto.FollowersCountDto;
-import meli.socialmeli.dto.UserFollowersListDto;
-import meli.socialmeli.dto.UserFollowingListDto;
+import meli.socialmeli.dto.response.FollowersCountDto;
+import meli.socialmeli.dto.response.UserFollowersListDto;
+import meli.socialmeli.dto.response.UserFollowingListDto;
 import meli.socialmeli.services.FollowService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
