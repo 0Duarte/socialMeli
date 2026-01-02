@@ -1,16 +1,19 @@
-package meli.socialmeli.dto;
+package meli.socialmeli.dto.response;
+
+import java.time.LocalDate;
 
 public class FollowedPostDto {
+
     private Integer user_id;
     private Integer post_id;
-    private String date;
+    private LocalDate date;
     private ProductResponseDto product;
     private Integer category;
     private Double price;
 
     public FollowedPostDto(Integer user_id,
                            Integer post_id,
-                           String date,
+                           LocalDate date,
                            ProductResponseDto product,
                            Integer category,
                            Double price) {
@@ -30,9 +33,7 @@ public class FollowedPostDto {
         return post_id;
     }
 
-    public String getDate() {
-        return date;
-    }
+    public LocalDate getDate() {return date;}
 
     public ProductResponseDto getProduct() {
         return product;

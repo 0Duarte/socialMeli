@@ -1,4 +1,4 @@
-package meli.socialmeli.dto;
+package meli.socialmeli.dto.response;
 
 import java.util.List;
 
