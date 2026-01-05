@@ -1,5 +1,6 @@
 package meli.socialmeli.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import meli.socialmeli.dto.response.FollowedPostsResponseDto;
 import meli.socialmeli.dto.request.NewPostRequestDto;
@@ -19,12 +20,18 @@ public class PostController
         this.postService = postService;
     }
 
+    @Operation(
+            summary = "[US0005] Create a new post",
+            description = "Create a new post")
     @PostMapping("/publish")
     public ResponseEntity<Void> publish(@Valid @RequestBody NewPostRequestDto dto) {
         postService.createPost(dto);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "[US0006] Get posts from followed users",
+            description = "Get posts from users that the given user follows, with optional ordering")
     @GetMapping("/followed/{userId}/list")
     public ResponseEntity<FollowedPostsResponseDto> getFollowedPosts(
             @PathVariable Integer userId,
@@ -33,12 +40,18 @@ public class PostController
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "[US0010] Create a new promotional post",
+            description = "Create a new promotional post")
     @PostMapping("/promo-pub")
     public ResponseEntity<Void> publishPromo(@Valid @RequestBody NewPromoPostRequestDto dto) {
         postService.createPromoPost(dto);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "[US0011] Get count of promotional products for a user",
+            description = "Get the count of promotional products associated with a specific user")
     @GetMapping("/promo-pub/count")
     public ResponseEntity<PromoProductsCountDto> getPromoProductsCount(
             @RequestParam("user_id") Integer userId) {
