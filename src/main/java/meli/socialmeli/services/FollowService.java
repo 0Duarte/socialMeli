@@ -26,21 +26,21 @@ public class FollowService {
     @Transactional
     public void follow(Integer userId, Integer userIdToFollow){
         if (userId == null || userIdToFollow == null) {
-            throw new IllegalArgumentException("IDs de usuário inválidos.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User IDs cannot be null.");
         }
 
         if (userId.equals(userIdToFollow)){
-            throw new IllegalArgumentException("Um usuário não pode seguir a si mesmo.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user cannot follow themselves.");
         }
 
         User follower = userRepository.findById(userId).orElseThrow(() ->
-        new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário seguidor não encontrado."));
+        new ResponseStatusException(HttpStatus.NOT_FOUND, "Follow user not found."));
 
         User seller = userRepository.findById(userIdToFollow).orElseThrow(() ->
-                new IllegalArgumentException("Usuário a ser seguido não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to follow not found."));
 
         if (!seller.getIs_seller()) {
-            throw new IllegalArgumentException("Só é possível seguir usuários vendedores.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user to follow is not a seller.");
         }
 
         if (!follower.getFollowings().contains(seller)) {
@@ -52,14 +52,14 @@ public class FollowService {
     @Transactional
     public void unfollow(Integer userId, Integer userIdToUnfollow){
         if(userId.equals(userIdToUnfollow)){
-            throw new IllegalArgumentException("Um usuário não pode deixar de seguir a si mesmo.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A user cannot unfollow themselves.");
         }
 
         User follower = userRepository.findById(userId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário seguidor não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Follow user not found."));
 
         User seller = userRepository.findById(userIdToUnfollow).orElseThrow(() ->
-                new IllegalArgumentException("Usuário a ser deixado de seguir não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to unfollow not found."));
 
         if (follower.getFollowings().contains(seller)) {
             follower.getFollowings().remove(seller);
@@ -69,7 +69,7 @@ public class FollowService {
 
     public FollowersCountDto getFollowersCount(Integer userId){
         User seller = userRepository.findById(userId).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         int followersCount = seller.getFollowers().size();
 
@@ -79,7 +79,7 @@ public class FollowService {
 
     public UserFollowersListDto getFollowersList(Integer userId, String order){
         User seller = userRepository.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("Usuário a ser consultado não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         List<UserSummaryDto> followersDtos = seller.getFollowers().stream().map(follower ->
                 new UserSummaryDto(
@@ -98,7 +98,7 @@ public class FollowService {
 
     public UserFollowingListDto getFollowedList(Integer userId, String order){
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("Usuário não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         List<UserSummaryDto> followingDtos = user.getFollowings().stream().map(following ->
                 new UserSummaryDto(
@@ -128,7 +128,7 @@ public class FollowService {
                 list.sort(Comparator.comparing(UserSummaryDto::getUserName).reversed());
                 break;
             default:
-                throw new IllegalArgumentException("Ordem inválida. Use 'name_asc' ou 'name_desc'.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order, use 'name_asc' or 'name_desc'.");
         }
     }
 }

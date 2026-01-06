@@ -13,7 +13,9 @@ import meli.socialmeli.model.User;
 import meli.socialmeli.repository.PostRepository;
 import meli.socialmeli.repository.ProductRepository;
 import meli.socialmeli.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -38,7 +40,7 @@ public class PostService {
     public void createPost(NewPostRequestDto dto) {
 
         User seller = userRepository.findById(dto.getUser_id())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         LocalDate date = dto.getDate();
 
@@ -71,7 +73,7 @@ public class PostService {
     public FollowedPostsResponseDto getFollowedPosts(Integer userId, String order) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("Usuário não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST,"User not found"));
 
         Set<User> followings = user.getFollowings();
         if (followings.isEmpty()) {
@@ -123,7 +125,7 @@ public class PostService {
     public void createPromoPost(NewPromoPostRequestDto dto) {
 
         User seller = userRepository.findById(dto.getUser_id()).orElseThrow(() ->
-                new IllegalArgumentException("Usuário vendedor não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         LocalDate date = dto.getDate();
 
@@ -156,7 +158,7 @@ public class PostService {
     public PromoProductsCountDto getPromoProductsCount(Integer userId) {
 
         User seller = userRepository.findById(userId).orElseThrow(() ->
-                new IllegalArgumentException("Usuário vendedor não encontrado."));
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         int count = postRepository.findBySellerAndHasPromoTrue(seller).size();
 
@@ -181,7 +183,7 @@ public class PostService {
                 posts.sort(Comparator.comparing(Post::getDate).reversed());
                 break;
             default:
-                throw new IllegalArgumentException("Tipo de ordenação por data inválido: " + order);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order, use 'date_asc' or 'date_desc'.");
         }
     }
 }
