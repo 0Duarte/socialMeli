@@ -15,6 +15,14 @@ public class NewPromoPostRequestDto extends NewPostRequestDto {
         return has_promo;
     }
 
+    public void setHas_promo(Boolean has_promo) {
+        this.has_promo = has_promo;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
     public Double getDiscount() {
         return discount;
     }
