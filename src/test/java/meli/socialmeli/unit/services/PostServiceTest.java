@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,7 +48,7 @@ class PostServiceTest {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(postRepository.findBySellerIn(Set.of(seller))).thenReturn(List.of(post));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> postService.getFollowedPosts(1, "data_invalida"));
     }
 
