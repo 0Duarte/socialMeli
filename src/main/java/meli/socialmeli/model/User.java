@@ -47,10 +47,6 @@ public class User {
         return id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public Set<User> getFollowings() {
         return followings;
     }
