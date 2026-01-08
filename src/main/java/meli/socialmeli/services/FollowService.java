@@ -45,6 +45,7 @@ public class FollowService {
 
         if (!follower.getFollowings().contains(seller)) {
             follower.getFollowings().add(seller);
+            seller.getFollowers().add(follower);
             userRepository.save(follower);
         }
     }

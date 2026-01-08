@@ -1,6 +1,7 @@
 package meli.socialmeli.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
@@ -20,7 +21,7 @@ public class User {
     private String userName;
 
     @Column(name = "is_seller", nullable = false)
-    @NotBlank
+    @NotNull
     private Boolean is_seller;
 
     @ManyToMany
@@ -73,5 +74,8 @@ public class User {
     public Boolean getIs_seller() {
         return is_seller;
     }
+
+    public void setIsSeller(Boolean is_seller) {
+        this.is_seller = is_seller;
+    }
 }
-//test
