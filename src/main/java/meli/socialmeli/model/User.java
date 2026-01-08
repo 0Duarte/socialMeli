@@ -1,6 +1,7 @@
 package meli.socialmeli.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
@@ -19,6 +20,10 @@ public class User {
     @Size(max = 15)
     private String userName;
 
+    @Column(name = "is_seller", nullable = false)
+    @NotNull
+    private Boolean is_seller;
+
     @ManyToMany
     @JoinTable(
             name = "user_follows",
@@ -32,9 +37,14 @@ public class User {
 
     public User() {}
 
-    public User(Integer id, String userName) {
+    public User(Integer id, String userName, Boolean is_seller) {
         this.id = id;
         this.userName = userName;
+        this.is_seller = is_seller;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Integer getId() {
@@ -64,5 +74,12 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public Boolean getIs_seller() {
+        return is_seller;
+    }
+
+    public void setIsSeller(Boolean is_seller) {
+        this.is_seller = is_seller;
+    }
 }
-//test
