@@ -117,20 +117,29 @@ public class FollowService {
         );
     }
 
-    private void sortByName(List<UserSummaryDto> list, String order){
-        if(order == null || order.isBlank()){
+    private void sortByName(List<UserSummaryDto> list, String order) {
+        if (order == null || order.isBlank()) {
             return;
         }
 
-        switch(order){
+        switch (order) {
             case "name_asc":
-                list.sort(Comparator.comparing(UserSummaryDto::getUserName));
+                list.sort(Comparator.comparing(
+                        u -> u.getUserName() == null ? "" : u.getUserName().toLowerCase()
+                ));
                 break;
+
             case "name_desc":
-                list.sort(Comparator.comparing(UserSummaryDto::getUserName).reversed());
+                list.sort(Comparator.comparing(
+                        (UserSummaryDto u) -> u.getUserName() == null ? "" : u.getUserName().toLowerCase()
+                ).reversed());
                 break;
+
             default:
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order, use 'name_asc' or 'name_desc'.");
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Invalid order, use 'name_asc' or 'name_desc'."
+                );
         }
     }
 }
