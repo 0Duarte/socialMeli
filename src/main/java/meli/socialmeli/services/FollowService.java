@@ -93,6 +93,7 @@ public class FollowService {
         return new UserFollowersListDto(
                 userId,
                 seller.getUserName(),
+                seller.getIs_seller(),
                 followersDtos
         );
     }
