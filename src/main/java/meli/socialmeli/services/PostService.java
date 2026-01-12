@@ -42,6 +42,10 @@ public class PostService {
         User seller = userRepository.findById(dto.getUser_id())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
+        if (!seller.getIs_seller()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only sellers can create promo posts");
+        }
+
         LocalDate date = dto.getDate();
 
         ProductRequestDto p = dto.getProduct();
@@ -127,6 +131,9 @@ public class PostService {
         User seller = userRepository.findById(dto.getUser_id()).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
+        if (!seller.getIs_seller()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only sellers can create promo posts");
+        }
         LocalDate date = dto.getDate();
 
         ProductRequestDto p = dto.getProduct();
