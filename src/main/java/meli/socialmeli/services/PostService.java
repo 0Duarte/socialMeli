@@ -43,7 +43,7 @@ public class PostService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
 
         if (!seller.getIs_seller()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only sellers can create promo posts");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only sellers can create posts");
         }
 
         LocalDate date = dto.getDate();
