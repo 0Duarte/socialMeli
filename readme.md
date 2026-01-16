@@ -20,6 +20,14 @@ Simula funcionalidades sociais: seguir vendedores, listar seguidores/seguidos, r
 
 ---
 
+## Collection
+
+- Você pode importar a collection do Postman para testar a API manualmente:  
+  [SocialMeli.postman_collection.json](SocialMeli.postman_collection.json)
+
+
+---
+
 ## Tecnologias
 
 - Java 21
